@@ -19,15 +19,14 @@ class TokenProvider(
     @Value("\${auth.jwt.secret}")
     private val secret: String,
 
-    @Value("\${auth.jwt.accessTokenExpirationHour}")
-    private val accessTokenExpirationHour: Long
+//    @Value("\${auth.jwt.accessTokenExpirationHour}")
+//    private val accessTokenExpirationHour: Long
 ) {
     private fun generateToken(
         subject: String,
         email: String,
         nickname: String,
         role: String,
-        expirationPeriod: Duration
     ): String {
 
         val claims: Claims = Jwts.claims()
@@ -42,7 +41,7 @@ class TokenProvider(
             .subject(subject)
             .issuer(issuer)
             .issuedAt(Date.from(now))
-            .expiration(Date.from(now.plus(expirationPeriod)))
+            .expiration(Date.from(now.plus(Duration.ofHours(1))))
             .claims(claims)
             .signWith(key)
             .compact()
@@ -54,7 +53,7 @@ class TokenProvider(
         role: String,
         nickname: String
     ): String{
-        return generateToken(subject, email, nickname, role, Duration.ofHours(accessTokenExpirationHour))
+        return generateToken(subject, email, nickname, role)
     }
 
     fun validateToken(jwt: String): Result<Jws<Claims>> {

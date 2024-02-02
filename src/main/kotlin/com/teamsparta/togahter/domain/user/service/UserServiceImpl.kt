@@ -1,17 +1,14 @@
 package com.teamsparta.togahter.domain.user.service
 
 import com.teamsparta.togahter.domain.exception.InvalidCredentialException
+import com.teamsparta.togahter.domain.exception.NotAuthorizationException
 import com.teamsparta.togahter.domain.exception.UserNotFoundException
 import com.teamsparta.togahter.domain.security.TokenProvider
-import com.teamsparta.togahter.domain.user.dto.LoginRequest
-import com.teamsparta.togahter.domain.user.dto.LoginResponse
-import com.teamsparta.togahter.domain.user.dto.SignUpRequest
-import com.teamsparta.togahter.domain.user.dto.UserResponse
-import com.teamsparta.togahter.domain.user.model.ProfileEntity
-import com.teamsparta.togahter.domain.user.model.UserEntity
-import com.teamsparta.togahter.domain.user.model.UserRole
-import com.teamsparta.togahter.domain.user.model.signUp
+import com.teamsparta.togahter.domain.security.UserPrincipal
+import com.teamsparta.togahter.domain.user.dto.*
+import com.teamsparta.togahter.domain.user.model.*
 import com.teamsparta.togahter.domain.user.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,6 +19,13 @@ class UserServiceImpl(
     private val encoder: PasswordEncoder,
     private val tokenProvider: TokenProvider
 ): UserService {
+
+    @Transactional
+    override fun getProfile(userPrincipal: UserPrincipal): ProfileResponse {
+        val user = userRepository.findByIdOrNull(userPrincipal.id)?:
+        throw UserNotFoundException("User", null)
+        return user.toProfile()
+    }
 
     @Transactional
     override fun signUp(request: SignUpRequest): UserResponse {
@@ -47,6 +51,7 @@ class UserServiceImpl(
             ).signUp()
     }
 
+    @Transactional
     override fun login(request: LoginRequest): LoginResponse {
 
         val user = userRepository.findByProfileEntityEmail(request.email)
@@ -69,5 +74,34 @@ class UserServiceImpl(
         )
     }
 
+    @Transactional
+    override fun updateProfile(
+        userPrincipal: UserPrincipal,
+        updateProfileRequest: UpdateProfileRequest
+    ): ProfileResponse {
+        val user = userRepository.findByIdOrNull(userPrincipal.id)?:
+        throw UserNotFoundException("User", null)
+        if (user.id != userPrincipal.id) throw NotAuthorizationException()
+        user.profileEntity = ProfileEntity(
+            name = updateProfileRequest.name,
+            phone = updateProfileRequest.phone,
+            age = updateProfileRequest.age,
+            region = updateProfileRequest.region,
+            email = updateProfileRequest.email,
+            nickname = updateProfileRequest.nickname,
+            interest = updateProfileRequest.interest,
+            introduction = updateProfileRequest.introduction,
+            password = user.profileEntity.password
+        )
+        return userRepository.save(user).toProfile()
+    }
+
+    @Transactional
+    override fun deleteProfile(userPrincipal: UserPrincipal) {
+        val user = userRepository.findByIdOrNull(userPrincipal.id)?:
+        throw UserNotFoundException("User", null)
+        if (user.id != userPrincipal.id) throw NotAuthorizationException()
+        userRepository.delete(user)
+    }
 
 }

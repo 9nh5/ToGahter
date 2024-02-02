@@ -1,9 +1,7 @@
 package com.teamsparta.togahter.domain.user.model
 
-import com.teamsparta.togahter.domain.user.dto.SignUpRequest
 import com.teamsparta.togahter.domain.user.dto.UserResponse
 import jakarta.persistence.*
-import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
 @Table(name = "app_user")

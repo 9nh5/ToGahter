@@ -58,6 +58,13 @@ dependencies {
 
 	implementation ("org.postgresql:postgresql")
 
+	implementation("io.jsonwebtoken:jjwt-api:0.12.3") //JWT
+	implementation("org.springframework.boot:spring-boot-starter-security") //Spring Security
+
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3") //JWT
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3") //JWT
+	runtimeOnly("org.postgresql:postgresql")
+
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

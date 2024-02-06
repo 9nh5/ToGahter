@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface TeamRepository : JpaRepository<TeamEntity, Long>{
 
     fun existsByTeamProfileEntityName(name: String): Boolean
+
+    fun findByLeader(leader: Long): TeamEntity?
 }
 

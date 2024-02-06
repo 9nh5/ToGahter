@@ -9,6 +9,6 @@ data class RecruitmentResponse(
     val description: String,
     val status: Boolean,
     val region: String,
-    val type: String,
+    val interest: String,
     val createdAt: LocalDateTime
 )

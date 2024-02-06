@@ -16,11 +16,11 @@ class RecruitmentEntity(
     @Column(name = "description")
     var description: String,
 
-    @Column(name = "status")
+    @Column(name = "interest")
     var status: Boolean = false,
 
     @Column(name = "type")
-    var type: String,
+    var interest: String,
 
     @Column(name = "region")
     var region: String,
@@ -50,7 +50,7 @@ fun RecruitmentEntity.toResponse(): RecruitmentResponse {
         nickname = user.profileEntity.nickname,
         description = description,
         status = status,
-        type = type,
+        interest = interest,
         region = region,
         createdAt = createdAt
     )
@@ -64,7 +64,7 @@ fun RecruitmentEntity.toGetting(): RecruitmentDetailResponse {
         description = description,
         status = status,
         region = region,
-        type = type,
+        interest = interest,
         createdAt = createdAt
 //        comments = comments.map { it.toComments() }
     )

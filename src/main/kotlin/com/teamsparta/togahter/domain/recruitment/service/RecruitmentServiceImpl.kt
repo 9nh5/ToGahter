@@ -12,6 +12,8 @@ import com.teamsparta.togahter.domain.recruitment.model.toGetting
 import com.teamsparta.togahter.domain.recruitment.model.toResponse
 import com.teamsparta.togahter.domain.recruitment.repository.RecruitmentRepository
 import com.teamsparta.togahter.domain.security.UserPrincipal
+import com.teamsparta.togahter.domain.team.repository.TeamPostRepository
+import com.teamsparta.togahter.domain.team.repository.TeamRepository
 import com.teamsparta.togahter.domain.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -20,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RecruitmentServiceImpl(
     private val recruitmentRepository: RecruitmentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val teamRepository: TeamRepository,
+    private val teamPostRepository: TeamPostRepository
 ): RecruitmentService {
 
     @Transactional
@@ -39,15 +43,19 @@ class RecruitmentServiceImpl(
     override fun createRecruitment(
         request: CreateRecruitmentRequest,
         userPrincipal: UserPrincipal,
+        leader: Long
         ): RecruitmentResponse {
         val user = userRepository.findByIdOrNull(userPrincipal.id)?: throw UserNotFoundException("User", null)
+        val team = teamRepository.findByLeader(leader) ?: throw NotAuthorizationException()
+        if (user.id != team.leader) {
+            throw NotAuthorizationException()}
         return recruitmentRepository.save<RecruitmentEntity?>(
                 RecruitmentEntity(
                     user = user,
                     title = request.title,
                     description = request.description,
                     region = request.region,
-                    type = request.type
+                    interest = request.interest
                     )
                 ).toResponse()
     }
@@ -62,7 +70,7 @@ class RecruitmentServiceImpl(
         recruitment.title = title
         recruitment.description = description
         recruitment.region = region
-        recruitment.type = type
+        recruitment.interest = type
 
         return recruitmentRepository.save(recruitment).toResponse()
     }

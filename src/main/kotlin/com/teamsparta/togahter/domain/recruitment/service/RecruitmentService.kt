@@ -12,7 +12,7 @@ interface RecruitmentService {
 
     fun getRecruitment(recruitmentId: Long): RecruitmentDetailResponse
 
-    fun createRecruitment(request: CreateRecruitmentRequest, userPrincipal: UserPrincipal): RecruitmentResponse
+    fun createRecruitment(request: CreateRecruitmentRequest, userPrincipal: UserPrincipal, leader: Long): RecruitmentResponse
 
     fun updateRecruitment(request: UpdateRecruitmentRequest, recruitmentId: Long, userPrincipal: UserPrincipal): RecruitmentResponse
 

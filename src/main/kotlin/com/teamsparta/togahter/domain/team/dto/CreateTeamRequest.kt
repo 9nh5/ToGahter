@@ -5,5 +5,6 @@ data class CreateTeamRequest(
     val region: String,
     val interest: String,
     val introduction: String,
-    val rule: String
+    val rule: String,
+//    val leader: String
 )

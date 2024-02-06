@@ -24,7 +24,7 @@ data class SignUpRequest(
     val email: String,
 
     @Schema(description = "비밀번호", example = "password")
-    @field:Pattern(regexp = "^{4,20}")
+    @field:Pattern(regexp = ".{4,20}")
     val password: String,
 
     @Schema(description = "닉네임", example = "Nickname12")

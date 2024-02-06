@@ -1,6 +1,7 @@
 package com.teamsparta.togahter.domain.user.model
 
 import com.teamsparta.togahter.domain.recruitment.model.RecruitmentEntity
+import com.teamsparta.togahter.domain.team.model.TeamEntity
 import com.teamsparta.togahter.domain.user.dto.ProfileResponse
 import com.teamsparta.togahter.domain.user.dto.UserResponse
 import jakarta.persistence.*
@@ -17,7 +18,10 @@ class UserEntity(
     var role: UserRole,
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    var recruitments: MutableList<RecruitmentEntity> = mutableListOf()
+    var recruitments: MutableList<RecruitmentEntity> = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY)
+    var teams: MutableList<TeamEntity> = mutableListOf()
 
 ) {
     @Id

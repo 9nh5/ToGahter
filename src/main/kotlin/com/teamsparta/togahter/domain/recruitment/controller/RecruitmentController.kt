@@ -35,16 +35,17 @@ class RecruitmentController(
             .body(recruitmentService.getRecruitment(recruitmentId))
     }
 
-    @PreAuthorize("hasRole('LEADER') or hasRole('MEMBER')")
+//    @PreAuthorize("hasRole('LEADER') or hasRole('MEMBER')")
     @Operation(summary = "팀원 모집 게시글 작성")
-    @PostMapping
+    @PostMapping("/{leader}")
     fun createRecruitment(
         @Valid
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable leader: Long,
         @RequestBody createRecruitmentRequest: CreateRecruitmentRequest
     ): ResponseEntity<RecruitmentResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(recruitmentService.createRecruitment(createRecruitmentRequest, userPrincipal))
+            .body(recruitmentService.createRecruitment(createRecruitmentRequest, userPrincipal, leader))
     }
 }
